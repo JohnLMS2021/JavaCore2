@@ -1,5 +1,6 @@
 package Lesson7;
 
+import Lesson7.db.DatabaseRepositorySQLiteImpl;
 import Lesson7.enums.Periods;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +9,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class YandexWeatherProvider implements WeatherProvider {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void getWeather(Periods periods) throws IOException {
+    public void getWeather(Periods periods) throws IOException, SQLException {
         if (periods.equals(Periods.NOW)) {
             HttpUrl url = new HttpUrl.Builder()
                     .scheme("https")
@@ -60,6 +62,8 @@ public class YandexWeatherProvider implements WeatherProvider {
                         + el.getParts().getDay().getCondition() + ", температура: "
                         + el.getParts().getDay().getTemp() + ".");
             }
+            DatabaseRepositorySQLiteImpl db = new DatabaseRepositorySQLiteImpl();
+            db.saveWeatherData(cityList, myForecasts);
 
             } else if (periods.equals(Periods.FIVE_DAYS)) {
                 HttpUrl url = new HttpUrl.Builder()
@@ -96,6 +100,14 @@ public class YandexWeatherProvider implements WeatherProvider {
                         + el.getParts().getDay().getCondition() + ", температура: "
                         + el.getParts().getDay().getTemp());
             }
-            }
+            DatabaseRepositorySQLiteImpl db = new DatabaseRepositorySQLiteImpl();
+
+            db.saveWeatherData(cityList, myForecasts);
+            } else if (periods.equals(Periods.DATA_BASE)) {
+            DatabaseRepositorySQLiteImpl db = new DatabaseRepositorySQLiteImpl();
+
+            db.getAllSavedData();
+
         }
+    }
 }
