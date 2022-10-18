@@ -7,6 +7,8 @@ public final class ApplicationGlobalState {
     private String selectedLon = null;
     private final String API_KEY = "f0d46c92-ac5d-408a-9369-25018d670770";
 
+    private final String DB_FILENAME = "application.db";
+
     private ApplicationGlobalState() {
     }
 
@@ -31,5 +33,8 @@ public final class ApplicationGlobalState {
 
     public String getApiKey() {
         return this.API_KEY;
+    }
+    public String getDbFileName() {
+        return DB_FILENAME;
     }
 }
